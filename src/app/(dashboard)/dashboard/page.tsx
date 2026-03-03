@@ -21,9 +21,6 @@ export default async function DashboardPage() {
     redirect("/vendor/projects");
   }
 
-  if (profile.role === "school") {
-    redirect("/school/projects");
-  }
-
-  redirect("/");
+  // "school" or "both" → default to school dashboard
+  redirect("/school/projects");
 }

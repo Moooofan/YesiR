@@ -1,9 +1,5 @@
 import type { ProjectStatus, ApplicationStatus, BudgetType } from "@/types";
 
-export const SITE_NAME = "YesiR 校管家";
-export const SITE_DESCRIPTION =
-  "校管家幫您快速媒合優質校園服務廠商，讓老師專心教學";
-
 export const CATEGORIES = [
   { id: 1, name: "校園維修", slug: "campus-maintenance", icon: "Wrench" },
   { id: 2, name: "清潔服務", slug: "cleaning-service", icon: "Sparkles" },

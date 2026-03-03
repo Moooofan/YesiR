@@ -1,10 +1,5 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
-  email: z.string().email("請輸入有效的電子郵件"),
-  password: z.string().min(1, "請輸入密碼"),
-});
-
 export const vendorRegistrationSchema = z
   .object({
     email: z.string().email("請輸入有效的電子郵件"),
@@ -79,7 +74,6 @@ export const applicationSchema = z.object({
   proposedTimeline: z.string().optional(),
 });
 
-export type LoginInput = z.infer<typeof loginSchema>;
 export type VendorRegistrationInput = z.infer<typeof vendorRegistrationSchema>;
 export type SchoolRegistrationInput = z.infer<typeof schoolRegistrationSchema>;
 export type ProjectInput = z.infer<typeof projectSchema>;

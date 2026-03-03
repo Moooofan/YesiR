@@ -29,22 +29,13 @@ export async function login(data: {
   const supabase = await createClient();
   const authEmail = toAuthEmail(data.email, data.role);
 
-  // Try role-suffixed email first
-  let result = await supabase.auth.signInWithPassword({
+  const result = await supabase.auth.signInWithPassword({
     email: authEmail,
     password: data.password,
   });
 
-  // Fallback: try raw email (for accounts created before the suffix change)
   if (result.error) {
-    result = await supabase.auth.signInWithPassword({
-      email: data.email,
-      password: data.password,
-    });
-  }
-
-  if (result.error) {
-    return { error: "帳號或密碼錯誤" };
+    return { error: "帳號或密碼錯誤，請確認登入身分是否正確" };
   }
 
   redirect("/dashboard");
