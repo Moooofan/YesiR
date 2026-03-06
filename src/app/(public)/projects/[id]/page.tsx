@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,19 @@ import {
   DollarSign,
   Users,
   GraduationCap,
+  School,
 } from "lucide-react";
 import { formatBudget } from "@/lib/utils";
+
+const SCHOOL_TYPE_LABELS: Record<string, string> = {
+  elementary: "國民小學",
+  junior_high: "國民中學",
+  senior_high: "高級中學",
+  vocational: "高級職業學校",
+  comprehensive: "綜合高中",
+  special: "特殊教育學校",
+  other: "其他",
+};
 
 export default async function ProjectDetailPage({
   params,
@@ -27,7 +39,10 @@ export default async function ProjectDetailPage({
       `
       *,
       categories (name, slug),
-      school_profiles (school_name, city, district)
+      school_profiles (
+        school_name, city, district, address,
+        logo_url, school_type, student_count, founded_year, introduction
+      )
     `
     )
     .eq("id", id)
@@ -40,6 +55,11 @@ export default async function ProjectDetailPage({
     project.budget_min,
     project.budget_max
   );
+
+  const school = project.school_profiles;
+  const schoolTypeLabel = school?.school_type
+    ? SCHOOL_TYPE_LABELS[school.school_type] || school.school_type
+    : null;
 
   return (
     <div>
@@ -127,23 +147,75 @@ export default async function ProjectDetailPage({
             </div>
           )}
 
-          {/* School Info */}
-          {project.school_profiles && (
-            <div className="mt-6 flex items-center gap-3 rounded-xl border-l-4 border-primary bg-muted/30 p-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/8">
-                <GraduationCap className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <div className="text-sm font-bold">
-                  {project.school_profiles.school_name}
-                </div>
-                {project.school_profiles.city && (
-                  <div className="text-xs text-muted-foreground">
-                    {project.school_profiles.city}
-                    {project.school_profiles.district &&
-                      ` ${project.school_profiles.district}`}
+          {/* School Info - Enhanced */}
+          {school && (
+            <div className="mt-6 rounded-xl border bg-gradient-to-br from-primary/5 to-transparent p-5">
+              <h3 className="mb-4 flex items-center gap-2 font-bold">
+                <School className="h-5 w-5 text-primary" />
+                發案學校
+              </h3>
+              <div className="flex gap-4">
+                {/* School Logo */}
+                {school.logo_url ? (
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border">
+                    <Image
+                      src={school.logo_url}
+                      alt={`${school.school_name} 校徽`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-primary/8">
+                    <GraduationCap className="h-8 w-8 text-primary" />
                   </div>
                 )}
+
+                {/* School Details */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold">
+                      {school.school_name}
+                    </span>
+                    {schoolTypeLabel && (
+                      <Badge variant="outline" className="text-xs">
+                        {schoolTypeLabel}
+                      </Badge>
+                    )}
+                  </div>
+
+                  {/* Location */}
+                  {(school.city || school.address) && (
+                    <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {school.address ||
+                        `${school.city}${school.district ? ` ${school.district}` : ""}`}
+                    </div>
+                  )}
+
+                  {/* Stats */}
+                  <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                    {school.student_count && (
+                      <span className="flex items-center gap-1">
+                        <Users className="h-3.5 w-3.5" />
+                        學生人數：{school.student_count.toLocaleString()} 人
+                      </span>
+                    )}
+                    {school.founded_year && (
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3.5 w-3.5" />
+                        創校：{school.founded_year} 年
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Introduction */}
+                  {school.introduction && (
+                    <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">
+                      {school.introduction}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           )}

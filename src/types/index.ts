@@ -54,6 +54,14 @@ export interface VendorProfile {
   is_published: boolean;
   total_completed_projects: number;
   avg_rating: number;
+  // 新增欄位
+  capital_amount: number | null;
+  established_year: number | null;
+  employee_count: number | null;
+  gallery_urls: string[] | null;
+  service_areas: string[] | null;
+  certifications: string | null;
+  business_hours: string | null;
   created_at: string;
   updated_at: string;
   categories?: Category[];
@@ -71,6 +79,14 @@ export interface SchoolProfile {
   address: string | null;
   school_type: string | null;
   total_posted_projects: number;
+  // 新增欄位
+  logo_url: string | null;
+  gallery_urls: string[] | null;
+  student_count: number | null;
+  founded_year: number | null;
+  principal_name: string | null;
+  school_code: string | null;
+  introduction: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -111,4 +127,21 @@ export interface Application {
   updated_at: string;
   project?: Project;
   vendor?: VendorProfile;
+}
+
+export interface Conversation {
+  id: string;
+  school_user_id: string;
+  vendor_user_id: string;
+  last_message_at: string;
+  created_at: string;
+}
+
+export interface Message {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  content: string;
+  is_read: boolean;
+  created_at: string;
 }

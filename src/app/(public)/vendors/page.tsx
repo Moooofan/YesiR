@@ -28,6 +28,9 @@ export default async function VendorsPage({
       description,
       city,
       total_completed_projects,
+      logo_url,
+      employee_count,
+      established_year,
       vendor_categories (
         categories (name)
       )
@@ -131,6 +134,9 @@ export default async function VendorsPage({
                   totalCompletedProjects={
                     vendor.total_completed_projects as number
                   }
+                  logoUrl={vendor.logo_url as string | null}
+                  employeeCount={vendor.employee_count as number | null}
+                  establishedYear={vendor.established_year as number | null}
                 />
               );
             })}

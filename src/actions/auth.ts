@@ -29,10 +29,33 @@ export async function login(data: {
   const supabase = await createClient();
   const authEmail = toAuthEmail(data.email, data.role);
 
-  const result = await supabase.auth.signInWithPassword({
+  // Try role-suffixed email first (new accounts)
+  let result = await supabase.auth.signInWithPassword({
     email: authEmail,
     password: data.password,
   });
+
+  // Fallback: try raw email (old accounts created before suffix system)
+  if (result.error) {
+    result = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
+
+    // Verify the account role matches the selected login role
+    if (!result.error) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", result.data.user.id)
+        .single();
+
+      if (profile?.role !== data.role && profile?.role !== "both") {
+        await supabase.auth.signOut();
+        return { error: "此帳號不是以此身分註冊，請確認登入身分" };
+      }
+    }
+  }
 
   if (result.error) {
     return { error: "帳號或密碼錯誤，請確認登入身分是否正確" };

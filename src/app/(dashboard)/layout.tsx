@@ -32,12 +32,15 @@ export default async function DashboardLayout({
     ? [
         { href: "/vendor/projects", label: "瀏覽案件" },
         { href: "/vendor/applications", label: "我的應徵" },
+        { href: "/vendor/messages", label: "訊息" },
         { href: "/vendor/profile", label: "公司資料" },
       ]
     : [
+        { href: "/school/vendors", label: "搜尋廠商" },
         { href: "/school/projects", label: "我的案件" },
         { href: "/school/projects/new", label: "發布新案件" },
         { href: "/school/applications", label: "應徵管理" },
+        { href: "/school/messages", label: "訊息" },
         { href: "/school/profile", label: "學校資料" },
       ];
 

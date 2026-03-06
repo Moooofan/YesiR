@@ -21,6 +21,6 @@ export default async function DashboardPage() {
     redirect("/vendor/projects");
   }
 
-  // "school" or "both" → default to school dashboard
-  redirect("/school/projects");
+  // "school" or "both" → default to school vendor search
+  redirect("/school/vendors");
 }

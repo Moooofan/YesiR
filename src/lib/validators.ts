@@ -74,7 +74,12 @@ export const applicationSchema = z.object({
   proposedTimeline: z.string().optional(),
 });
 
+export const messageSchema = z.object({
+  content: z.string().min(1, "訊息不能為空").max(2000, "訊息最多 2000 個字"),
+});
+
 export type VendorRegistrationInput = z.infer<typeof vendorRegistrationSchema>;
 export type SchoolRegistrationInput = z.infer<typeof schoolRegistrationSchema>;
 export type ProjectInput = z.infer<typeof projectSchema>;
 export type ApplicationInput = z.infer<typeof applicationSchema>;
+export type MessageInput = z.infer<typeof messageSchema>;
